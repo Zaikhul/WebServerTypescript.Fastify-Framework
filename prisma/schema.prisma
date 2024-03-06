@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime  @default(now())
+  updateAt    DateTime  @updatedAt
+  email       String    @unique
+  password    String
+  profile     Profile
+
+  // Relation Fields
+  posts       Post[]
+}
+
+type Profile {
+  firstname   String?
+  lastname    String?
+  address     Address?
+}
+
+type Address {
+  country String
+  city    String
+  province String
+  state   String
+  zip     String
+}
+
+model Post {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  value         String?
+  credential    Users       @relation(fields: [credentialId], references: [id])
+  credentialId  String      @db.ObjectId
+}
+
+// model TestResult {
+//   id          Int       @default(autoincrement()) @map("id")
+//   updateAt    DateTime  @updatedAt
+//   result      String
+//   date        DateTime
+// }
+
+model Token {
+  id          Int       @id @map("_id")
+  createdAt   DateTime  @default(now())  
+  updatedAt   DateTime  @updatedAt
+  type        TokenType
+  emailToken  String?   @unique
+  valid       Boolean   @default(true)
+  expiration  DateTime
+
+  // Relation Fields
+  // user        Users     @relation(fields: [userId], references: [id])
+  // userId      Int
+}
+
+enum TokenType {
+  EMAIL
+  API
+}

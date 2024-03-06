@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Data Input</title>
+  </head>
+  <body>
+    <h1>Data Input</h1>
+    <form id="productInputForm">
+      <label for="ph">pH:</label>
+      <input type="number" step="0.01" id="ph" name="ph" required /><br />
+
+      <label for="dissolvedOxygen">Dissolved Oxygen:</label>
+      <input
+        type="number"
+        step="0.01"
+        id="dissolvedOxygen"
+        name="dissolvedOxygen"
+        required /><br />
+
+      <label for="salinity">Salinity:</label>
+      <input
+        type="number"
+        step="0.01"
+        id="salinity"
+        name="salinity"
+        required /><br />
+
+      <label for="no2">NO2:</label>
+      <input type="number" step="0.01" id="no2" name="no2" required /><br />
+
+      <label for="totalOrganicMatter">Total Organic Matter:</label>
+      <input
+        type="number"
+        step="0.01"
+        id="totalOrganicMatter"
+        name="totalOrganicMatter"
+        required /><br />
+
+      <label for="waterLevel">Water Level:</label>
+      <input
+        type="number"
+        step="0.01"
+        id="waterLevel"
+        name="waterLevel"
+        required /><br />
+
+      <input type="submit" value="Submit" />
+    </form>
+
+    <script>
+      const form = document.getElementById("productInputForm");
+
+      form.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        const measurement = {
+          ph: parseFloat(formData.get("ph")),
+          dissolvedOxygen: parseFloat(formData.get("dissolvedOxygen")),
+          salinity: parseFloat(formData.get("salinity")),
+          no2: parseFloat(formData.get("no2")),
+          totalOrganicMatter: parseFloat(formData.get("totalOrganicMatter")),
+          waterLevel: parseFloat(formData.get("waterLevel")),
+        };
+
+        try {
+          const response = await fetch("/api/products/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(measurement),
+          });
+
+          if (response.ok) {
+            alert("Product input data submitted successfully");
+            form.reset();
+          } else {
+            const errorData = await response.json();
+            throw new Error(errorData.message);
+          }
+        } catch (error) {
+          alert("Failed to submit product input data: " + error.message);
+        }
+      });
+    </script>
+  </body>
+</html>
