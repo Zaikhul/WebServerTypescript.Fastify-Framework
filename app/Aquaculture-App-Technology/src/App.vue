@@ -16,13 +16,13 @@ import Register from './views/Register.vue'
         Technology</a
       >
       <Navbar />
-      <Posters />
 
       <!-- <nav>
         <RouterLink to="/login">Login</RouterLink>
         <RouterLink to="/register">Register</RouterLink>
       </nav> -->
     </div>
+    <Posters />
   </header>
   <!-- End Header -->
   <RouterView />
